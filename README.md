@@ -1,0 +1,1 @@
+Un proyecto de prueba con una base de datos creada con [Room](https://developer.android.com/reference/androidx/room/package-summary).
