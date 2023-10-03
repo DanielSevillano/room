@@ -3,11 +3,14 @@ package com.daniel.room
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Clear
@@ -37,11 +40,11 @@ import com.daniel.room.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private val db by lazy {
+    private val database by lazy {
         Room.databaseBuilder(
             applicationContext,
             PersonaDatabase::class.java,
-            "personas.db"
+            "personas"
         ).build()
     }
 
@@ -59,7 +62,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     var dialogoAbierto by rememberSaveable { mutableStateOf(false) }
                     val scope = rememberCoroutineScope()
-                    val dao = db.dao()
+                    val dao = database.dao()
                     val flujo = dao.obtenerPersonas()
                     var personas: List<Persona> by remember {
                         mutableStateOf(emptyList())
@@ -102,20 +105,22 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) { paddingValues ->
-                        LazyColumn(
-                            modifier = Modifier.padding(paddingValues),
-                            contentPadding = PaddingValues(start = 20.dp, bottom = 20.dp)
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 300.dp),
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(paddingValues),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             items(personas) { persona ->
                                 ListItem(
                                     headlineContent = {
                                         Text(
                                             text = "${persona.nombre} ${persona.apellido}",
+                                            modifier = Modifier.padding(start = 8.dp),
                                             style = MaterialTheme.typography.titleMedium
                                         )
-                                    },
-                                    supportingContent = {
-                                        Text(text = "${persona.id}")
                                     },
                                     trailingContent = {
                                         IconButton(

@@ -1,12 +1,9 @@
 package com.daniel.room
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity
+@Entity(primaryKeys = ["nombre", "apellido"])
 data class Persona(
     val nombre: String,
-    val apellido: String,
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val apellido: String
 )
